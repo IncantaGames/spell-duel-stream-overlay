@@ -1,16 +1,19 @@
 import Phaser from "phaser";
-import { GameScene } from "./game-scene";
+import { DuelScene } from "./scenes/duel-scene";
 
 class SimpleGame {
+  static WIDTH = 800;
+  static HEIGHT = 600;
+
   public game: Phaser.Game;
 
   constructor() {
     this.game = new Phaser.Game({
       type: Phaser.AUTO,
-      width: 800,
-      height: 600,
+      width: SimpleGame.WIDTH,
+      height: SimpleGame.HEIGHT,
       backgroundColor: "#18216D",
-      scene: [GameScene],
+      scene: [DuelScene],
       physics: {
         default: "arcade",
         arcade: {

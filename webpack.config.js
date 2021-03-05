@@ -1,5 +1,7 @@
 const path = require("path");
+
 module.exports = {
+  mode: "development",
   entry: "./src/app.ts",
   module: {
     rules: [
@@ -16,6 +18,5 @@ module.exports = {
   output: {
     filename: "app.js",
     path: path.resolve(__dirname, "dist")
-  },
-  mode: "development"
+  }
 };
