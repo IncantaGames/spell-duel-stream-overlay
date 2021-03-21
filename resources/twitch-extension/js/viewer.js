@@ -84,8 +84,8 @@ twitch.onAuthorized(function (auth) {
   token = auth.token;
   tuid = auth.userId;
 
-  // enable the button
-  $("#cast").removeAttr("disabled");
+  // enable the interface
+  $("#duel-interface").show();
 
   setAuth(token);
   $.ajax(requests.get);
