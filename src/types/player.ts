@@ -4,13 +4,13 @@ import { Spell } from "./spell";
 
 export class Player {
   public id: number;
-  public spell: SpellType;
+  public spellType: SpellType;
   public sprite: Phaser.GameObjects.Sprite | null;
   private attacking: boolean = false;
 
   constructor(id: number) {
     this.id = id;
-    this.spell = SpellType.Air;
+    this.spellType = SpellType.Air;
     this.sprite = null;
   }
 
@@ -32,13 +32,13 @@ export class Player {
       key: "death",
       frames: scene.anims.generateFrameNumbers("wizard-death", { start: 0, end: 6 }),
       frameRate: 10,
-      repeat: -1
+      repeat: 0
     });
     this.sprite!.anims.create({
       key: "fall",
       frames: scene.anims.generateFrameNumbers("wizard-fall", { start: 0, end: 1 }),
       frameRate: 10,
-      repeat: -1
+      repeat: 0
     });
     this.sprite!.anims.create({
       key: "hit",
@@ -66,8 +66,31 @@ export class Player {
     });
   }
 
+  initialize(x: number, y: number, physics: Phaser.Physics.Arcade.ArcadePhysics) {
+    this.sprite = physics.add.staticSprite(x, y, "wizard-idle");
+    this.sprite.setInteractive();
+    // this.sprite.input.hitArea.setTo(82, 55, 57, 86); // TODO: no idea how to minimize collision
+
+    this.initializeAnimations();
+  }
+
+  spellHitHandler(spell: Spell, otherPlayer: Player) {
+    this.sprite?.removeAllListeners();
+    otherPlayer.die();
+    spell.sprite?.destroy();
+  }
+
   idle() {
     this.sprite!.play("idle");
+  }
+
+  die() {
+    if (this.sprite) {
+      this.sprite.once("animationcomplete", () => {
+        this.sprite!.destroy();
+      });
+      this.sprite.play("death");
+    }
   }
 
   attack(otherPlayer?: Player) {
@@ -81,24 +104,25 @@ export class Player {
         frameKey: string
       ) => {
         if (frame.index === 4) {
-          const spell = new Spell(this.spell);
+          const spell = new Spell(this.spellType);
           spell.sprite = this.sprite!.scene.physics.add.sprite(
             this.sprite!.x + 50,
             this.sprite!.y - 17,
             "pink-helix"
           );
           if (otherPlayer?.sprite) {
-            // TODO
             spell.sprite.scene.physics.add.collider(
               spell.sprite,
               otherPlayer.sprite,
-              () => {},
+              () => {
+                this.spellHitHandler(spell, otherPlayer);
+              },
               undefined,
               this
             );
           }
           spell.sprite.setFlipX(true);
-          spell.sprite.body.velocity.x = 150;
+          spell.sprite.body.velocity.x = 250;
           spell.initializeAnimations();
           spell.start();
         }

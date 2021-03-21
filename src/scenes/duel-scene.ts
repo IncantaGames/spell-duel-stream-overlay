@@ -1,8 +1,6 @@
 import Phaser from "phaser";
 import { Player } from "../types/player";
-import { performance } from "perf_hooks";
-import { Spell } from "../types/spell";
-import { SpellType } from "../types/spell-type";
+import { SimpleGame } from "../app";
 
 export class DuelScene extends Phaser.Scene {
   public sand: Phaser.Physics.Arcade.StaticGroup | null;
@@ -55,14 +53,21 @@ export class DuelScene extends Phaser.Scene {
     this.sand.refresh();
 
     this.player1 = new Player(0);
-    this.player1.sprite = this.physics.add.sprite(50, 580-20-37/2, "wizard-idle");
-
-    this.player1.initializeAnimations();
-
+    this.player1.initialize(50, 580-20-37/2, this.physics);
     this.player1.idle();
 
+    this.player2 = new Player(1);
+    this.player2.initialize(SimpleGame.WIDTH - 50, 580-20-37/2, this.physics);
+    this.player2.sprite!.setFlipX(true);
+
+    this.player2.idle();
+
     this.input.keyboard.on("keydown-A", () => {
-      this.player1?.attack();
+      this.player1!.attack(this.player2!);
+    });
+
+    this.events.on("cast", () => {
+      this.player1!.attack(this.player2!);
     });
   }
 

@@ -1,0 +1,10 @@
+#duel-interface {
+  position: absolute;
+  bottom: 5rem;
+  width: 100%;
+  text-align: center;
+}
+
+.duel-button {
+  cursor: pointer;
+}

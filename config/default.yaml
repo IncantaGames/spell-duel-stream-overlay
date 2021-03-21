@@ -1,0 +1,13 @@
+twitch:
+  client-id: "ufkmh509rp5u600yd0xor777a5u9ck"
+  client-secret: "INVALID"
+  owner-id: "67929109"
+  channel-id: "67929109"
+  server-token-duration-s: 30
+  broadcast-interval-ms: 1000
+
+duel:
+  join-time-ms: 60000
+  ready-up-time-ms: 30000
+  round-pick-time: 10000
+  num-rounds: 3

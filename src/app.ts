@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 import { DuelScene } from "./scenes/duel-scene";
 
-class SimpleGame {
+export class SimpleGame {
   static WIDTH = 800;
   static HEIGHT = 600;
 
@@ -26,4 +26,14 @@ class SimpleGame {
 
 window.onload = () => {
   const game = new SimpleGame();
+
+  const ws = new WebSocket("wss://localhost:8080");
+
+  ws.addEventListener("message", (event) => {
+    const { action } = JSON.parse(event.data);
+
+    if (action === "cast") {
+      game.game.scene.getAt(0)?.events.emit("cast");
+    }
+  });
 };
