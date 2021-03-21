@@ -104,7 +104,10 @@ const options = {
   cert: fs.readFileSync(path.join(__dirname, "..", "conf", "server.crt"))
 };
 
-const server = https.createServer(options, app);
+const server = https.createServer(
+  process.env.NODE_ENV === "production" ? {} : options,
+  app
+);
 
 const wss = new WebSocket.Server({ server });
 

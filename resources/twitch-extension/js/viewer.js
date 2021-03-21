@@ -1,8 +1,8 @@
 let token = "";
 let tuid = "";
 
-const backendUrl = "https://localhost:8080";
-// const backendUrl = "https://incanta.games:8080";
+// const backendUrl = "https://localhost:8080";
+const backendUrl = "https://overlay.incanta.games";
 
 // because who wants to type this every time?
 const twitch = window.Twitch.ext;
