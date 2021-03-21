@@ -83,7 +83,6 @@ twitch.onAuthorized(function (auth) {
   // save our credentials
   token = auth.token;
   tuid = auth.userId;
-  console.log(auth);
 
   // enable the button
   $("#cast").removeAttr("disabled");
