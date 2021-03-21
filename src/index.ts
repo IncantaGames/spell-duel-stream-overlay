@@ -98,6 +98,9 @@ app.post("/set-action", (req, res) => {
   }
 });
 
+// @ts-ignore
+app.options("*", cors());
+
 app.use(cors());
 
 const options: any = {};
