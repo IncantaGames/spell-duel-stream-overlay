@@ -17,10 +17,10 @@
   <script src="js/jquery-3.3.1.min.js" type="text/javascript"></script>
   <script src="js/viewer.js" type="text/javascript"></script>
   <div id="duel-interface">
-    <div id="duel-start-button" class="hvr-grow duel-button" onclick="startDuelPool()">
+    <div id="duel-start-button" class="hvr-grow duel-button">
       <button>Start Pool</button>
     </div>
-    <div id="duel-join-button" class="hvr-grow duel-button" onclick="joinDuelPool()">
+    <div id="duel-join-button" class="hvr-grow duel-button">
       <button>Join Pool (# seconds left)</button>
     </div>
     <div id="joined-pool">
@@ -34,7 +34,7 @@
     </div>
     <div id="ready-up">
       <span>It's your turn to duel! Press Ready Up in the next # seconds to duel or forfeit your spot!</span>
-      <div class="hvr-grow duel-button" onclick="readyUp()">
+      <div class="hvr-grow duel-button">
         <button>Ready up</button>
       </div>
     </div>
@@ -43,13 +43,13 @@
     </div>
     <div id="action">
       <span>Select an action in the next # seconds or you'll forfeit!</span>
-      <div class="hvr-grow duel-button" onclick="setAction(1)">
+      <div id="action-shield" class="hvr-grow duel-button">
         <button>Shield</button>
       </div>
-      <div class="hvr-grow duel-button" onclick="setAction(2)">
+      <div id="action-attack" class="hvr-grow duel-button">
         <button>Attack</button>
       </div>
-      <div class="hvr-grow duel-button" onclick="setAction(3)">
+      <div id="action-power-up" class="hvr-grow duel-button">
         <button>Power Up</button>
       </div>
     </div>

@@ -89,8 +89,9 @@ app.post("/ready-up", async (req, res) => {
 });
 
 app.post("/set-action", (req, res) => {
-  const name = "TODO";
-  const action = 0; // TODO
+  const payload = verifyAndDecode(req.headers.authorization || "") as any;
+  const name = payload.opaque_user_id as string;
+  const action = parseInt(req.body, 10);
 
   if (duelPool?.currentDuel?.player1.name === name || duelPool?.currentDuel?.player2.name === name) {
     duelPool.setAction(name, action);

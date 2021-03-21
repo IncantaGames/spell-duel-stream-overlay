@@ -12,7 +12,9 @@ const requests = {
   cast: createRequest("POST", "cast"),
   setSpell: createRequest("POST", "set-spell"),
   startDuelPool: createRequest("POST", "start-pool"),
-  joinDuelPool: createRequest("POST", "join-duel-pool")
+  joinDuelPool: createRequest("POST", "join-duel-pool"),
+  readyUp: createRequest("POST", "ready-up"),
+  setAction: (action) => createRequest("POST", "set-action", action)
 };
 
 const Status = {
@@ -56,12 +58,13 @@ let state = {
   }
 };
 
-function createRequest(type, method) {
+function createRequest(type, method, data) {
   return {
-    type: type,
+    type,
     url: `${backendUrl}/${method}`,
     success: () => twitch.rig.log(`successful ${backendUrl}/${method}`),
-    error: logError
+    error: logError,
+    data
   }
 }
 
@@ -107,6 +110,16 @@ function startDuelPool() {
 function joinDuelPool() {
   if (!token) { return twitch.rig.log("Not authorized"); }
   $.ajax(requests.joinDuelPool);
+}
+
+function readyUp() {
+  if (!token) { return twitch.rig.log("Not authorized"); }
+  $.ajax(requests.readyUp);
+}
+
+function setAction(action) {
+  if (!token) { return twitch.rig.log("Not authorized"); }
+  $.ajax(requests.setAction(action));
 }
 
 function renderState() {
@@ -303,6 +316,25 @@ function getPlayerStatus(serverState) {
 }
 
 $(function () {
+  $("#duel-start-button").click(() => {
+    startDuelPool();
+  });
+  $("#duel-join-button").click(() => {
+    joinDuelPool();
+  });
+  $("#ready-up > div").click(() => {
+    readyUp();
+  });
+  $("#action-shield").click(() => {
+    setAction(1);
+  });
+  $("#action-attack").click(() => {
+    setAction(2);
+  });
+  $("#action-power-up").click(() => {
+    setAction(3);
+  });
+
   twitch.listen("broadcast", function (target, contentType, update) {
     // update from the server
     const serverState = JSON.parse(update);
