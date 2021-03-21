@@ -101,7 +101,7 @@ app.use(cors());
 
 const options: any = {};
 
-if (process.env.NODE_ENV === "production") {
+if (process.env.NODE_ENV !== "production") {
   options.key = fs.readFileSync(path.join(__dirname, "..", "conf", "server.key"));
   options.cert = fs.readFileSync(path.join(__dirname, "..", "conf", "server.crt"));
 }
