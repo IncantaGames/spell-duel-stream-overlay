@@ -5,3 +5,4 @@ conf
 lib
 *.zip
 Spell Casting Interface.json
+config/local.yaml
