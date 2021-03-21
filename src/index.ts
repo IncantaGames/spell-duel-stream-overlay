@@ -99,7 +99,11 @@ app.post("/set-action", (req, res) => {
 });
 
 // @ts-ignore
-app.options("*", cors());
+app.options("*", (req, res, next) => {
+  console.log("here");
+  const corsFn = cors();
+  corsFn(req, res, next);
+});
 
 app.use(cors());
 
