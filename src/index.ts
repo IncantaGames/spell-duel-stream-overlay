@@ -99,15 +99,14 @@ app.post("/set-action", (req, res) => {
 
 app.use(cors());
 
-const options = {
-  key: fs.readFileSync(path.join(__dirname, "..", "conf", "server.key")),
-  cert: fs.readFileSync(path.join(__dirname, "..", "conf", "server.crt"))
-};
+const options: any = {};
 
-const server = https.createServer(
-  process.env.NODE_ENV === "production" ? {} : options,
-  app
-);
+if (process.env.NODE_ENV === "production") {
+  options.key = fs.readFileSync(path.join(__dirname, "..", "conf", "server.key"));
+  options.cert = fs.readFileSync(path.join(__dirname, "..", "conf", "server.crt"));
+}
+
+const server = https.createServer(options, app);
 
 const wss = new WebSocket.Server({ server });
 
