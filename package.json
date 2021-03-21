@@ -10,7 +10,8 @@
     "clean": "rm -rf dist",
     "build": "webpack && tsc",
     "watch": "webpack --watch & nodemon --watch 'src/index.ts' --exec 'ts-node' src/index.ts",
-    "start": "webpack --watch & node --inspect=9229 lib/index.js"
+    "start": "webpack --watch & node --inspect=9229 lib/index.js",
+    "start:prod": "webpack --watch & NODE_ENV=production node --inspect=9229 lib/index.js",
   },
   "dependencies": {
     "@types/ws": "^7.4.0",
