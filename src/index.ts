@@ -2,6 +2,7 @@ import config from "config";
 import express from "express";
 import path from "path";
 import https from "https";
+import http from "http";
 import fs from "fs";
 import cors from "cors";
 import WebSocket from "ws";
@@ -13,6 +14,8 @@ import { GetWebsocketHandlerForPhaser } from "./phaser-comms";
 
 const app = express();
 const emitter = new EventEmitter();
+
+app.use(cors());
 
 // Verify the header and the enclosed JWT.
 function verifyAndDecode(header: string) {
@@ -98,25 +101,36 @@ app.post("/set-action", (req, res) => {
   }
 });
 
-// @ts-ignore
-app.options("*", cors());
-
-const options: any = {};
-
 if (process.env.NODE_ENV !== "production") {
-  options.key = fs.readFileSync(path.join(__dirname, "..", "conf", "server.key"));
-  options.cert = fs.readFileSync(path.join(__dirname, "..", "conf", "server.crt"));
+  // use self signed cert in dev
+
+  const options = {
+    key: fs.readFileSync(path.join(__dirname, "..", "conf", "server.key")),
+    cert: fs.readFileSync(path.join(__dirname, "..", "conf", "server.crt"))
+  };
+
+  const server = https.createServer(options, app);
+
+  const wss = new WebSocket.Server({ server });
+
+  wss.on("connection", GetWebsocketHandlerForPhaser(emitter));
+  
+  server.listen(8080, () => {
+    console.log("Server listening on https://localhost:8080");
+  });
+} else {
+  // in prod, we use cloudflares cert, so http is fine
+
+  const server = http.createServer(app);
+
+  const wss = new WebSocket.Server({ server });
+
+  wss.on("connection", GetWebsocketHandlerForPhaser(emitter));
+
+  server.listen(8080, () => {
+    console.log("Server listening on http://localhost:8080");
+  });
 }
-
-const server = https.createServer(options, app);
-
-const wss = new WebSocket.Server({ server });
-
-wss.on("connection", GetWebsocketHandlerForPhaser(emitter));
-
-server.listen(8080, () => {
-  console.log("Server listening on http://localhost:8080");
-});
 
 // start sending updates to twitch
 intervalBroadcast();
