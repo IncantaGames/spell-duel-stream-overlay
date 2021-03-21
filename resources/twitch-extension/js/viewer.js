@@ -291,7 +291,7 @@ function getPlayerStatus(serverState) {
       if (serverState.duel.round === 0) {
         // we're in the ready up round
         if (
-          (isPlayer1 && serverState.duel.player1.ready)
+          (isPlayer1 && serverState.duel.player1.ready) &&
           (isPlayer2 && serverState.duel.player2.ready)
         ) {
           return Status.WaitingForDuel;
@@ -300,7 +300,7 @@ function getPlayerStatus(serverState) {
         }
       } else {
         if (
-          (isPlayer1 && serverState.duel.player1.ready)
+          (isPlayer1 && serverState.duel.player1.ready) &&
           (isPlayer2 && serverState.duel.player2.ready)
         ) {
           return Status.WaitingForResult;
