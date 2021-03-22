@@ -64,15 +64,9 @@ function createRequest(type, method, data) {
     url: `${backendUrl}/${method}`,
     success: () => twitch.rig.log(`successful ${backendUrl}/${method}`),
     error: logError,
-    data
+    data,
+    headers: { "Authorization": `Bearer ${token}` }
   }
-}
-
-function setAuth(token) {
-  Object.keys(requests).forEach((req) => {
-    twitch.rig.log("Setting auth headers");
-    requests[req].headers = { "Authorization": `Bearer ${token}` }
-  });
 }
 
 twitch.onContext(function (context) {
@@ -87,7 +81,6 @@ twitch.onAuthorized(function (auth) {
   // enable the interface
   $("#duel-interface").show();
 
-  setAuth(token);
   $.ajax(requests.get);
 });
 
