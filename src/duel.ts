@@ -5,7 +5,8 @@ export enum PlayerAction {
   Shield = 1,
   Attack = 2,
   PowerUp = 3,
-  Ready = 4
+  Ready = 4,
+  NoAction = 5
 }
 
 interface IPlayerState {
@@ -80,10 +81,12 @@ export class Duel {
   }
 
   setAction(playerName: string, action: PlayerAction): RoundStatus {
-    if (this.player1.name === playerName) {
+    if (this.player1.name === playerName && this.player1.action === PlayerAction.Unknown) {
       this.player1.action = action;
-    } else {
+    } else if (this.player2.name === playerName && this.player2.action === PlayerAction.Unknown) {
       this.player2.action = action;
+    } else {
+      return RoundStatus.Waiting;
     }
 
     if (
@@ -111,6 +114,10 @@ export class Duel {
               this.lastRoundStatus = RoundStatus.Player1Won;
               break;
             }
+            case PlayerAction.NoAction: {
+              this.lastRoundStatus = RoundStatus.Player2Won;
+              break;
+            }
           }
         }
         case PlayerAction.Shield: {
@@ -133,6 +140,10 @@ export class Duel {
               this.lastRoundStatus = RoundStatus.BothAlive;
               break;
             }
+            case PlayerAction.NoAction: {
+              this.lastRoundStatus = RoundStatus.BothAlive;
+              break;
+            }
           }
         }
         case PlayerAction.PowerUp: {
@@ -150,13 +161,37 @@ export class Duel {
               this.lastRoundStatus = RoundStatus.BothAlive;
               break;
             }
+            case PlayerAction.NoAction: {
+              this.lastRoundStatus = RoundStatus.BothAlive;
+              break;
+            }
+          }
+        }
+        case PlayerAction.NoAction: {
+          switch (this.player2.action) {
+            case PlayerAction.Attack: {
+              this.lastRoundStatus = RoundStatus.Player2Won;
+              break;
+            }
+            case PlayerAction.Shield: {
+              this.lastRoundStatus = RoundStatus.BothAlive;
+              break;
+            }
+            case PlayerAction.PowerUp: {
+              this.lastRoundStatus = RoundStatus.BothAlive;
+              break;
+            }
+            case PlayerAction.NoAction: {
+              this.lastRoundStatus = RoundStatus.BothAlive;
+              break;
+            }
           }
         }
       }
 
       this.player1.lastRoundAction = this.player1.action;
       this.player2.lastRoundAction = this.player2.action;
-  
+
       // reset for next round
       this.round++;
       this.roundOverAt = new Date(
@@ -164,7 +199,7 @@ export class Duel {
       );
       this.player1.action = PlayerAction.Unknown;
       this.player2.action = PlayerAction.Unknown;
-  
+
       if (
         this.round > config.get<number>("duel.num-rounds") &&
         this.lastRoundStatus === RoundStatus.BothAlive

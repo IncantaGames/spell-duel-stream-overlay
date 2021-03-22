@@ -62,6 +62,10 @@ function intervalBroadcast() {
       duelPool = null;
     }
 
+    if (duelPool) {
+      await duelPool.processTimeouts();
+    }
+
     await BroadcastState(duelPool);
     intervalBroadcast();
   }, config.get<number>("twitch.broadcast-interval-ms"));
@@ -114,7 +118,7 @@ if (process.env.NODE_ENV !== "production") {
   const wss = new WebSocket.Server({ server });
 
   wss.on("connection", GetWebsocketHandlerForPhaser(emitter));
-  
+
   server.listen(8080, () => {
     console.log("Server listening on https://localhost:8080");
   });
