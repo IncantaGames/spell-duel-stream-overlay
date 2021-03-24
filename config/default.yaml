@@ -9,5 +9,5 @@ twitch:
 duel:
   join-time-ms: 60000
   ready-up-time-ms: 30000
-  round-pick-time-ms: 10000
+  round-pick-time-ms: 20000
   num-rounds: 3
