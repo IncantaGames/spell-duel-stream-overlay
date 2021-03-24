@@ -9,11 +9,11 @@ const twitch = window.Twitch.ext;
 
 // create the request options for our Twitch API calls
 const requests = {
-  cast: createRequest("POST", "cast"),
-  setSpell: createRequest("POST", "set-spell"),
-  startDuelPool: createRequest("POST", "start-pool"),
-  joinDuelPool: createRequest("POST", "join-duel-pool"),
-  readyUp: createRequest("POST", "ready-up"),
+  cast: () => createRequest("POST", "cast"),
+  setSpell: () => createRequest("POST", "set-spell"),
+  startDuelPool: () => createRequest("POST", "start-pool"),
+  joinDuelPool: () => createRequest("POST", "join-duel-pool"),
+  readyUp: () => createRequest("POST", "ready-up"),
   setAction: (action) => createRequest("POST", "set-action", action)
 };
 
@@ -81,7 +81,7 @@ twitch.onAuthorized(function (auth) {
   // enable the interface
   $("#duel-interface").show();
 
-  $.ajax(requests.get);
+  $.ajax(requests.get());
 });
 
 function logError(_, error, status) {
@@ -96,17 +96,17 @@ function logSuccess(hex, status) {
 
 function startDuelPool() {
   if (!token) { return twitch.rig.log("Not authorized"); }
-  $.ajax(requests.startDuelPool);
+  $.ajax(requests.startDuelPool());
 }
 
 function joinDuelPool() {
   if (!token) { return twitch.rig.log("Not authorized"); }
-  $.ajax(requests.joinDuelPool);
+  $.ajax(requests.joinDuelPool());
 }
 
 function readyUp() {
   if (!token) { return twitch.rig.log("Not authorized"); }
-  $.ajax(requests.readyUp);
+  $.ajax(requests.readyUp());
 }
 
 function setAction(action) {

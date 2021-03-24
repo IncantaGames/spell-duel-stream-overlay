@@ -18,8 +18,9 @@ const emitter = new EventEmitter();
 app.use(cors());
 
 // Verify the header and the enclosed JWT.
-function verifyAndDecode(header: string) {
+function verifyAndDecode(header: string, res: express.Response) {
   const bearerPrefix = "Bearer ";
+
   if (header.startsWith(bearerPrefix)) {
     try {
       const token = header.substring(bearerPrefix.length);
@@ -30,12 +31,15 @@ function verifyAndDecode(header: string) {
       );
     }
     catch (ex) {
-      // throw Boom.unauthorized(STRINGS.invalidJwt);
-    throw new Error("unauth");
+      res.status(401).send("Invalid JWT");
+      console.log(`Exception during verifyAndDecode: ${ex}`);
+      return null;
     }
   }
-  // throw Boom.unauthorized(STRINGS.invalidAuthHeader);
-  throw new Error("unauth");
+
+  res.status(401).send("Invalid Auth Header");
+  console.log("Invalid Auth Header");
+  return null;
 }
 
 app.use("/app.js", express.static(path.join(__dirname, "..", "dist", "app.js")));
@@ -46,12 +50,6 @@ app.use("/", express.static(path.join(__dirname, "..", "resources", "twitch-exte
 
 app.get("/app", function (req, res) {
   res.sendFile(path.join(__dirname, "..", "resources", "app.html"));
-});
-
-app.post("/cast", (req, res) => {
-  const payload = verifyAndDecode(req.headers.authorization || "") as any;
-  const { channel_id: channelId, opaque_user_id: opaqueUserId } = payload;
-  emitter.emit("cast");
 });
 
 let duelPool: DuelPool | null = null;
@@ -72,13 +70,20 @@ function intervalBroadcast() {
 }
 
 app.post("/start-pool", (req, res) => {
+  // TODO: should be authed!
   if (duelPool === null) {
     duelPool = new DuelPool();
   }
 });
 
+// TODO: need to verify cors is working still?
 app.post("/join-duel-pool", async (req, res) => {
-  const payload = verifyAndDecode(req.headers.authorization || "") as any;
+  const payload = verifyAndDecode(req.headers.authorization || "", res) as any;
+
+  if (payload === null) {
+    return;
+  }
+
   const name = payload.opaque_user_id as string;
 
   if (duelPool?.accepting) {
@@ -87,7 +92,12 @@ app.post("/join-duel-pool", async (req, res) => {
 });
 
 app.post("/ready-up", async (req, res) => {
-  const payload = verifyAndDecode(req.headers.authorization || "") as any;
+  const payload = verifyAndDecode(req.headers.authorization || "", res) as any;
+
+  if (payload === null) {
+    return;
+  }
+
   const name = payload.opaque_user_id as string;
 
   if (duelPool?.currentDuel?.player1.name === name || duelPool?.currentDuel?.player2.name === name) {
@@ -96,7 +106,12 @@ app.post("/ready-up", async (req, res) => {
 });
 
 app.post("/set-action", (req, res) => {
-  const payload = verifyAndDecode(req.headers.authorization || "") as any;
+  const payload = verifyAndDecode(req.headers.authorization || "", res) as any;
+
+  if (payload === null) {
+    return;
+  }
+
   const name = payload.opaque_user_id as string;
   const action = parseInt(req.body, 10);
 
