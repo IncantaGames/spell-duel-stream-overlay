@@ -92,15 +92,20 @@ app.post("/join-duel-pool", async (req, res) => {
 });
 
 app.post("/ready-up", async (req, res) => {
+  console.log(1);
   const payload = verifyAndDecode(req.headers.authorization || "", res) as any;
+  console.log(2);
 
   if (payload === null) {
     return;
   }
+  console.log(3);
 
   const name = payload.opaque_user_id as string;
 
+  console.log(4, name);
   if (duelPool?.currentDuel?.player1.name === name || duelPool?.currentDuel?.player2.name === name) {
+    console.log(5);
     duelPool.currentDuel.readyUp(name);
   }
 });

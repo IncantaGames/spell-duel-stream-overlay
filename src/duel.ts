@@ -64,9 +64,11 @@ export class Duel {
     if (this.player1.name === playerName) {
       this.player1.ready = true;
       this.player1.action = PlayerAction.Ready;
-    } else {
+    } else if (this.player2.name === playerName) {
       this.player2.ready = true;
       this.player2.action = PlayerAction.Ready;
+    } else {
+      return;
     }
 
     if (this.player1.ready && this.player2.ready) {
