@@ -115,7 +115,7 @@ function renderState() {
   switch(state.status) {
     case Status.Idle: {
       $("#duel-start").show();
-      $("#duel-join").hide();
+      $("#join-duel").hide();
       $("#joined-pool").hide();
       $("#watching").hide();
       $("#waiting").hide();
@@ -127,7 +127,7 @@ function renderState() {
     }
     case Status.CanJoin: {
       $("#duel-start").hide();
-      $("#duel-join").show();
+      $("#join-duel").show();
       $("#joined-pool").hide();
       $("#watching").hide();
       $("#waiting").hide();
@@ -141,7 +141,7 @@ function renderState() {
     }
     case Status.Joined: {
       $("#duel-start").hide();
-      $("#duel-join").hide();
+      $("#join-duel").hide();
       $("#joined-pool").show();
       $("#watching").hide();
       $("#waiting").hide();
@@ -150,13 +150,13 @@ function renderState() {
       $("#action").hide();
       $("#waiting-for-result").hide();
 
-      $("#joined-pool span")[0].text(`You're in the pool!`);
-      $("#joined-pool span")[1].text(`${state.duel.secondsLeft} seconds left until starting.`);
+      $($("#joined-pool span")[0]).text(`You're in the pool!`);
+      $($("#joined-pool span")[1]).text(`${state.duel.secondsLeft} seconds left until starting.`);
       break;
     }
     case Status.Watching: {
       $("#duel-start").hide();
-      $("#duel-join").hide();
+      $("#join-duel").hide();
       $("#joined-pool").hide();
       $("#watching").show();
       $("#waiting").hide();
@@ -172,7 +172,7 @@ function renderState() {
     }
     case Status.Waiting: {
       $("#duel-start").hide();
-      $("#duel-join").hide();
+      $("#join-duel").hide();
       $("#joined-pool").hide();
       $("#watching").hide();
       $("#waiting").show();
@@ -182,10 +182,10 @@ function renderState() {
       $("#waiting-for-result").hide();
 
       playerPos = state.playersInPool.findIndex(p => p === tuid);
-      $("#waiting span")[0].text(`Duel ${state.duel.number} of ${
+      $($("#waiting span")[0]).text(`Duel ${state.duel.number} of ${
         state.duel.number + state.playersInPool / 2
       }: ${state.duel.player1.name} vs ${state.duel.player2.name}!`);
-      $("#waiting span")[1].text(`${
+      $($("#waiting span")[1]).text(`${
         playerPos >= 0 ?
         Math.floor(playerPos / 2) + 1 :
         "Unknown number of"
@@ -194,7 +194,7 @@ function renderState() {
     }
     case Status.WaitingForReadyUp: {
       $("#duel-start").hide();
-      $("#duel-join").hide();
+      $("#join-duel").hide();
       $("#joined-pool").hide();
       $("#watching").hide();
       $("#waiting").hide();
@@ -208,7 +208,7 @@ function renderState() {
     }
     case Status.WaitingForDuel: {
       $("#duel-start").hide();
-      $("#duel-join").hide();
+      $("#join-duel").hide();
       $("#joined-pool").hide();
       $("#watching").hide();
       $("#waiting").hide();
@@ -224,7 +224,7 @@ function renderState() {
     }
     case Status.WaitingForAction: {
       $("#duel-start").hide();
-      $("#duel-join").hide();
+      $("#join-duel").hide();
       $("#joined-pool").hide();
       $("#watching").hide();
       $("#waiting").hide();
@@ -240,7 +240,7 @@ function renderState() {
     }
     case Status.WaitingForResult: {
       $("#duel-start").hide();
-      $("#duel-join").hide();
+      $("#join-duel").hide();
       $("#joined-pool").hide();
       $("#watching").hide();
       $("#waiting").hide();
@@ -311,7 +311,7 @@ $(function () {
   $("#duel-join-button").click(() => {
     joinDuelPool();
   });
-  $("#ready-up > div").click(() => {
+  $("#ready-up-button").click(() => {
     readyUp();
   });
   $("#action-shield").click(() => {
