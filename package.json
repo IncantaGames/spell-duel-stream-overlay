@@ -24,7 +24,7 @@
     "jsonwebtoken": "^8.5.1",
     "phaser": "^3.52.0",
     "twitch": "^4.5.0",
-    "ws": "^7.4.3"
+    "ws": "^7.4.6"
   },
   "devDependencies": {
     "@types/config": "^0.0.38",
